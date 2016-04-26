@@ -1,3 +1,6 @@
+//Author: Ian Loftis
+//Created: 04/26/16
+
 angular.module('starter.controllers', ['ngCordova', 'jrCrop'])
   .controller('IntroCtrl', function ($scope, $http, $state, $ionicSlideBoxDelegate, $rootScope, $ionicHistory, $stateParams, $ionicLoading) {
 
