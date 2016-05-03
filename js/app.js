@@ -9,9 +9,17 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         if (window.StatusBar) {
             StatusBar.styleDefault();
         }
+			
+//				if(typeof analytics !== undefined) {
+//                analytics.startTrackerWithId("UA-76476354-1");
+//            } else {
+//                console.log("Google Analytics Unavailable");
+//            }
+//			
+        
     });
 
-
+    
 
 })
 
@@ -57,7 +65,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     .state('photo', {
         url: '/photo',
         views: {
-            'tab-photo': {
+            '': {
                 templateUrl: 'templates/tab-photo.html',
                 controller: 'PhotoCtrl'
             }

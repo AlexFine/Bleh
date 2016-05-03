@@ -1,11 +1,18 @@
 angular.module('starter.controllers', ['ngCordova', 'jrCrop'])
-  .controller('IntroCtrl', function ($scope, $http, $state, $ionicSlideBoxDelegate, $rootScope, $ionicHistory, $stateParams, $ionicLoading) {
+  .controller('IntroCtrl', function ($scope, $ionicModal, $http, $state, $ionicSlideBoxDelegate, $rootScope, $ionicHistory, $stateParams, $ionicLoading, $cordovaGoogleAnalytics) {
 
-
+//		if(typeof analytics !== undefined) { 
+//			analytics.trackView("Intro Controller"); 
+//		}
+// 
+//    $scope.initEvent = function() {
+//        if(typeof analytics !== undefined) { analytics.trackEvent("Category", "Action", "Label", 25); }
+//    }
+//		
+		
     $scope.status;
     $scope.pageswitch = function () {
-      $state.go('tab.notes');
-    }
+      $state.go('tab.notes'); };;
 
     currentUser = null;
     $rootScope.user = null;
@@ -26,8 +33,7 @@ angular.module('starter.controllers', ['ngCordova', 'jrCrop'])
     if ($stateParams.clear) {
       $ionicHistory.clearHistory();
       $ionicHistory.clearCache();
-    };
-
+    }
     $scope.login = function () {
 
       $state.go('login');
@@ -38,17 +44,42 @@ angular.module('starter.controllers', ['ngCordova', 'jrCrop'])
     }
 
     $scope.startApp = function () {
-      console.log(window.localStorage.getItem('rememberme'))
+      // console.log(window.localStorage.getItem('rememberme'))
       if (window.localStorage.getItem('rememberme') == "true") {
-        console.log("Go")
+        console.log("Go");;
         $state.go('tab.notes');
-        $scope.saveData();
+        $scope.saveDatas();
       } else {
         $state.go('intro');
-        console.log("test")
+        console.log("test");;
         window.localStorage['didTutorial'] = true;
       }
     };
+
+    $ionicModal.fromTemplateUrl('instructions-modal.html', {
+      scope: $scope,
+      animation: 'slide-in-up'
+    }).then(function(modal) {
+      $scope.modal = modal;
+    });
+    $scope.openInstructions = function() {
+      $scope.modal.show();
+    };
+    $scope.closeModal = function() {
+      $scope.modal.hide();
+    };
+    // Cleanup the modal when we're done with it!
+    $scope.$on('$destroy', function() {
+      $scope.modal.remove();
+    });
+    // Execute action on hide modal
+    $scope.$on('modal.hidden', function() {
+      // Execute action
+    });
+    // Execute action on remove modal
+    $scope.$on('modal.removed', function() {
+      // Execute action
+    });
 
     $scope.next = function () {
       $ionicSlideBoxDelegate.next();
@@ -65,31 +96,30 @@ angular.module('starter.controllers', ['ngCordova', 'jrCrop'])
     $scope.error = {};
     $scope.test = function (n) {
       //alert(n);
-    }
+    };;
 
     $scope.slideNext = function () {
       $ionicSlideBoxDelegate.next();
       $ionicSlideBoxDelegate.next();
       $ionicSlideBoxDelegate.next();
-    }
+    };;
 
-    $scope.username;
-    $scope.password;
+
     $scope.register = function () {
       $scope.status = "";
       window.plugins.googleplus.login(
         {
           // 'scopes': ' ', // optional, space-separated list of scopes, If not included or empty, defaults to `profile` and `email`.
           // 'webClientId': 'client id of the web app/server side', // optional clientId of your Web application from Credentials settings of your project - On Android, this MUST be included to get an idToken. On iOS, it is not required.
-          // 'offline': true, // optional, but requires the webClientId - if set to true the plugin will also return a serverAuthCode, which can be used to grant offline access to a non-Google server
+          'offline': true // optional, but requires the webClientId - if set to true the plugin will also return a serverAuthCode, which can be used to grant offline access to a non-Google server
         },
         function (obj) {
           // alert(JSON.stringify(obj));
           $scope.error;
 
-          var url = "https://quill-1176.appspot.com/_ah/api/quillApi/v1/user/new"
+          var url = "https://quill-1176.appspot.com/_ah/api/quillApi/v1/user/new";
           $http.post(url, {
-            "message": obj.idToken,
+            "message": obj.idToken
           }).then(function (resp) {
             console.log(resp);
             //alert("hi")
@@ -102,22 +132,18 @@ angular.module('starter.controllers', ['ngCordova', 'jrCrop'])
               $state.go('tab.notes');
 
             }
+            else{
+              alert("Error please try again")
+            }
           });// do something useful instead of alerting
         },
         function (msg) {
-          alert('error: ' + msg);
+          //alert('error: ' + msg);
         }
       );
     }
   })
   .controller('LoginCtrl', function ($location, $scope, $ionicPopup, $state, $http) {
-
-    $scope.username;
-    $scope.password;
-
-
-
-
 
     $scope.out = function () {
       var confirmPopup = $ionicPopup.confirm({
@@ -130,10 +156,10 @@ angular.module('starter.controllers', ['ngCordova', 'jrCrop'])
           console.log('You are sure');
           window.localStorage.setItem("rememberme", "false");
           window.localStorage.setItem("notes", JSON.stringify([]));
-          $scope.deleteNotes()
+          $scope.deleteNotes();
           window.plugins.googleplus.logout(
             function (msg) {
-              alert(msg); // do something useful instead of alerting
+              // alert(msg); // do something useful instead of alerting
             }
           );
           $state.go('intro');
@@ -141,7 +167,7 @@ angular.module('starter.controllers', ['ngCordova', 'jrCrop'])
           console.log('You are not sure');
         }
       });
-    }
+    };
 
 
 
@@ -149,7 +175,7 @@ angular.module('starter.controllers', ['ngCordova', 'jrCrop'])
     $scope.info = function () {
       var alertPopup = $ionicPopup.alert({
         title: 'About Quill',
-        template: 'Quill helps students learn more from their textbook pages. If you encounter a bug feel free to email us at company@quillapp.io. Interested in Quill? Check out our website at quillapp.io'
+        template: 'Take a clear photo of JUST the text you want analyzed (make sure there are no page numbers or extraneous information). We recommend taking photos of history or science textbooks.  If you encounter a bug feel free to email us at company@quillapp.io. Interested in Quill? Check out our website at quillapp.io. '
       });
 
       alertPopup.then(function (res) {
@@ -160,7 +186,15 @@ angular.module('starter.controllers', ['ngCordova', 'jrCrop'])
 
   })
   .controller('PhotoCtrl', function ($scope, Camera, $http, $cordovaCamera, $cordovaImagePicker, $state, $ionicModal, $ionicPopup, $ionicLoading, $jrCrop) {
+	
+	$scope.left = function(){
+		console.log("what's up");
+		$state.go('tab.notes');
+	}
 
+	
+	
+		$scope.items = []
 
     $ionicModal.fromTemplateUrl('my-modal2.html', {
       scope: $scope,
@@ -169,12 +203,13 @@ angular.module('starter.controllers', ['ngCordova', 'jrCrop'])
       $scope.modal = modal;
     });
     $scope.openModal = function () {
-      console.log("modal open")
+      console.log("modal open");
       $scope.modal.show();
-      $scope.items = []
+      
     };
     $scope.closeModal = function () {
       $scope.modal.hide();
+
     };
     //Cleanup the modal when we're done with it!
     $scope.$on('$destroy', function () {
@@ -200,7 +235,7 @@ angular.module('starter.controllers', ['ngCordova', 'jrCrop'])
         $scope.status = "get picture";
         $scope.lastPhoto = imageURI;
 
-        console.log("called the convertToCanvas Function")
+        console.log("called the convertToCanvas Function");
 
 
         var newimage = {
@@ -208,7 +243,7 @@ angular.module('starter.controllers', ['ngCordova', 'jrCrop'])
           sub: "Most recent photos 03/29/2016"
         };
 
-        console.log($scope.items)
+        console.log($scope.items);
         $scope.items.push(newimage);
         console.log($scope.items);
         $scope.reload();
@@ -216,9 +251,7 @@ angular.module('starter.controllers', ['ngCordova', 'jrCrop'])
       }, function (err) {
         console.err(err);
       }, {
-        quality: 100,
-        targetWidth: 320,
-        targetHeight: 320,
+        quality: 70,
         saveToPhotoAlbum: false
       });
 
@@ -242,20 +275,20 @@ angular.module('starter.controllers', ['ngCordova', 'jrCrop'])
       };
       image.src = url;
 
-    }
-    
+    };
+
     $scope.loading = false;
-    
-    
+
+
     $scope.picText = function () {
       if($scope.items.length == 0){
         alert("You didn't choose any photos!");
       }
       else{
-          alert("Images Are Loading!");
+        // alert("Images Are Loading!");
         $scope.loadingbar();
         $scope.status = "Sending Images ... ";
-        
+
 
         var addInfo = {};
 
@@ -265,9 +298,9 @@ angular.module('starter.controllers', ['ngCordova', 'jrCrop'])
         //$scope.base64(testPhoto);
         console.log("items length: " + $scope.items.length);
         var dataURL;
-        console.log($scope.items.length)
+        console.log($scope.items.length);
         var num = 0;
-        items = $scope.items
+        items = $scope.items;
         for (var i = 0; i < $scope.items.length; i++) {
 
           console.log("why did you not show?");
@@ -287,7 +320,7 @@ angular.module('starter.controllers', ['ngCordova', 'jrCrop'])
                   },
                   "features": [
                     {
-                      "type": "TEXT_DETECTION",
+                      "type": "TEXT_DETECTION"
                     }
                   ]
                 }
@@ -302,28 +335,30 @@ angular.module('starter.controllers', ['ngCordova', 'jrCrop'])
               // console.log(res);
               // alert(JSON.stringify(res))
               try{
-              text += res.data.responses[0].textAnnotations[0].description;
-              text = text.replace(/\n/g, " ");
-              // alert(text)
+                text += res.data.responses[0].textAnnotations[0].description;
+                text = text.replace(/\n/g, " ");
+                // alert(text)
               }
               catch(e){
 
               }
 
-                //alert(text)
-                // console.log(text);
-                num += 1
-                //now at this point, we have text, we'll run summary, concepts, and bias;
-                console.log(i)
-                //alert(num)
-                if (items.length == num) {
-                  if(text=="")
-                  {
-                    alert("no text in images");
-                      $scope.loading=false;
-                    $scope.endloadingbar();
+              //alert(text)
+              // console.log(text);
+              num += 1;
+              //now at this point, we have text, we'll run summary, concepts, and bias;
+              // console.log(i);
+              //alert(num)
+              if (items.length == num) {
+                if(text=="")
+                {
+                  alert("no text in images");
+                  $scope.loading=false;
                     $scope.closeModal();
-                  }else{
+                  $scope.endloadingbar();
+                    $scope.closepopup();
+
+                }else{
 
                   //alert("login")
                   window.plugins.googleplus.login(
@@ -334,29 +369,29 @@ angular.module('starter.controllers', ['ngCordova', 'jrCrop'])
                     },
                     function (obj) {
                       //alert(JSON.stringify(obj));
-                      $scope.status = "Gathering image dates ..."
-                      console.log("True")
+                      $scope.status = "Gathering image dates ...";
+                      console.log("True");
                       var d = new Date();
                       var str = d.toString();
                       str = str.substring(0, 15);
                       addInfo.text = text;
                       // console.log(text);
-                      var url = "https://quill-1176.appspot.com/_ah/api/quillApi/v1/text/upload"
+                      var url = "https://quill-1176.appspot.com/_ah/api/quillApi/v1/text/upload";
                       $http.post(url, {
                         "message": text,
                         "userID": obj.idToken,
                         "date": str
                       }).then(function (resp) {
-                        resp = resp.data
+                        resp = resp.data;
                         console.log(resp);
                         //alert(JSON.stringify(resp))
                         summary = resp.summary;
                         // console.log(summary)
-                        summary = summary[0].summary
+                        summary = summary[0].summary;
 
                         concepts = resp.keywords;
                         sentiment = resp.sentiment;
-                        keywords = []
+                        keywords = [];
                         for (var x = 0; x < concepts.length; x++) {
                           keywords.push([concepts[x], sentiment[x]])
                         }
@@ -378,29 +413,33 @@ angular.module('starter.controllers', ['ngCordova', 'jrCrop'])
                         var str = d.toString();
                         str = str.substring(0, 15);
                         addInfo.dates = str;
-
+                        $scope.closeModal();
+                        $scope.endloadingbar();
+                        $scope.closepopup();
                         // var newID = window.localStorage.getItem("notes").length;
                         // addInfo.id = newID;
 
                         // window.localStorage.setItem("notes", JSON.stringify(notes));
                         var storedNotes = JSON.parse(window.localStorage.getItem("notes"));
-                        $scope.status = "Storing notes..."
+                        $scope.status = "Storing notes...";
                         if (storedNotes == null) {
                           storedNotes = [];
                           addInfo.id = 0
                         } else {
                           addInfo.id = storedNotes.length;
                         }
-                        // console.log(storedNotes)
-                        storedNotes.push(addInfo)
-
+                        // alert(storedNotes)
+                        storedNotes.push(addInfo);
+                        // alert(storedNotes)
                         window.localStorage.setItem("notes", JSON.stringify(storedNotes));
-                        $scope.Newnotes = storedNotes;
+
+
+                        $scope.addNote(storedNotes)
                         // console.log(Newnotes)
                         $scope.loading=false;
-                          $scope.endloadingbar();
-                        $scope.closeModal();
-                        $scope.saveData();
+
+
+                        // $scope.saveDatas();
 
 
                         // console.log(JSON.stringify(addInfo));
@@ -414,15 +453,15 @@ angular.module('starter.controllers', ['ngCordova', 'jrCrop'])
                     }
                   );
                 }}
-              })
+            })
           })
 
         }
       }
-    }
+    };
 
     $scope.loadingbar = function(){
-$scope.loading = true;
+      $scope.loading = true;
       var Base64 = {
 
 
@@ -553,7 +592,7 @@ $scope.loading = true;
           return string;
         }
 
-      }
+      };
       var memes =[];
 
       $http.get("https://api.github.com/repos/kushaltirumala/memestorage/contents/memelist.json", {headers:{'Accept': 'application/json'}}).then(function(resp){
@@ -567,31 +606,31 @@ $scope.loading = true;
         console.log(meme);
         $scope.meme = meme;
 
-        console.log("made it")
+        console.log("made it");
         console.log("THE MEME IS " + meme);
-        $ionicPopup.show({
-          template: "Depending on how many images you've submitted it may take a minute to load. In the meantime you can continue to use the app or enjoy some in-house entertainment.<br> <img src='" + meme + "' style='width:100%;'>",
-        title: "Loading",
-        scope: $scope,
-        buttons: [
-         
-          {
-            text: 'Close',
-            type: 'button-balanced',
-            onTap: function () {
-              console.log("hello2");
-              $scope.endloadingbar();
 
+        var MemePop = $ionicPopup.show({
+          template: "Depending on how many images you've submitted it may take a minute to load.<br> <img src='" + meme + "' style='width:100%;'>",// In the meantime you can continue to use the app or enjoy some in-house entertainment.
+          title: "Loading",
+          scope: $scope,
+          buttons: [
+
+            {
+              text: 'Close',
+              type: 'button-balanced',
+              onTap: function () {
+                console.log("hello2");
+               MemePop.close()
+              }
             }
-          }
-        ]
-      });
-      
-      })
-      
+          ]
+        });
 $scope.closepopup = function () {
-        myPopup.close();
-      }
+        MemePop.close();
+      };
+      });
+
+
 
       //memes by kushal tirumala
       //  var memes = [
@@ -640,12 +679,20 @@ $scope.closepopup = function () {
 
       //setTimeout($scope.endloadingbar(),60000);
 
-    }
+    };
+
+//     $scope.closepopup = function () {
+//        MemePop.close();
+//      };
+//
+
     $scope.endloadingbar = function () {
-        //$scope.loading = false;
-      console.log("Images Finished Loading")
+      //$scope.loading = false;
+        $scope.closepopup();
+        //MemePop.close();
+      console.log("Images Finished Loading");
       $ionicLoading.hide();
-    }
+    };
 
     //Select photo testing here
     // 1
@@ -654,13 +701,13 @@ $scope.closepopup = function () {
       $state.go($state.current, {}, {
         reload: true
       });
-    }
+    };
 
     $scope.urlForImage = function (imageName) {
       var name = imageName.substr(imageName.lastIndexOf('/') + 1);
-      var trueOrigin = cordova.file.dataDirectory + name;
-      return trueOrigin;
-    }
+      return cordova.file.dataDirectory + name;
+
+    };
 
 
     //            $scope.photoselector = function () {
@@ -691,120 +738,157 @@ $scope.closepopup = function () {
     //                }
     //            })
 
+	$scope.openCamera = function (){
+		$scope.getPhoto();
+	}
+	
     $scope.photoselector = function () {
-        if($scope.loading){
-            console.log("nope")
+      if($scope.loading){
+        console.log("nope")
+      }
+      else{
+
+
+        var myPopup = $ionicPopup.show({
+          template: "Upload, take photo, or <a ng-click='closepopup();'>Close</a>",
+          title: "Take Photos",
+          scope: $scope,
+          buttons: [
+            {
+              text: 'Upload',
+              type: 'button-positive',
+              onTap: function () {
+                console.log("hello1");
+                myPopup.close();
+                $scope.choosePhoto();
+
+
+              }
+            },
+            {
+              text: 'Take Photo',
+              type: 'button-positive',
+              onTap: function () {
+                console.log("hello2");
+                myPopup.close();
+                $scope.getPhoto();
+
+              }
+            }
+          ]
+        });
+        $scope.closepopup = function () {
+          myPopup.close();
         }
-        else{
-            
-        
-      var myPopup = $ionicPopup.show({
-        template: "Upload from camera roll or carefully take a photo of <b>only</b> the text? Or <a ng-click='closepopup();'>Close</a>",
-        title: "Take Photos",
-        scope: $scope,
-        buttons: [
-          {
-            text: 'Upload',
-            type: 'button-positive',
-            onTap: function () {
-              console.log("hello1");
-              myPopup.close();
-              $scope.choosePhoto();
+      }
 
 
+
+    }
+		$scope.items = [];
+		      $scope.choosePhoto = function () {
+
+        console.log($scope.items);
+        window.imagePicker.getPictures(
+          function (results) {
+            for (var i = 0; i < results.length; i++) {
+
+              if (i < 3) {
+
+
+                console.log('Image URI: ' + results[i]);
+
+                var newimage = {
+                  src: results[i],
+                  sub: "Most recent photos 03/29/2016"
+                };
+                console.log($scope.items);
+                $scope.items.push(newimage);
+                console.log($scope.items);
+                $scope.reload();
+              } else {
+
+                alert("You can't upload more than 3 images, sorry!")
+              }
             }
           },
+          function (error) {
+            console.log('Error: ' + error);
+          }
+        );
+
+      }
+  })
+
+  .controller('NotesCtrl', function ($scope, $state, $ionicModal, $http, $ionicPopup) {
+	
+	$scope.right = function(){
+		console.log("what's up");
+		$state.go('photo');
+	}
+
+//    $ionicModal.fromTemplateUrl('my-modal2.html', {
+//      scope: $scope,
+//      animation: 'slide-in-up'
+//    }).then(function (modal) {
+//      $scope.modal = modal;
+//    });
+//    $scope.openModal = function () {
+//      console.log("modal open");
+//      $scope.modal.show();
+//    };
+//    $scope.closeModal = function () {
+//      $scope.modal.hide();
+//    };
+//    //Cleanup the modal when we're done with it!
+//    $scope.$on('$destroy', function () {
+//      $scope.modal.remove();
+//    });
+//    // Execute action on hide modal
+//    $scope.$on('modal.hidden', function () {
+//      // Execute action
+//    });
+//    // Execute action on remove modal
+//    $scope.$on('modal.removed', function () {
+//      // Execute action
+//    });
+
+
+    $scope.example = function(){
+        $state.go('signup');
+    }
+
+
+    $scope.tutorial = function () {
+      var myPopup = $ionicPopup.show({
+        template: "This tutorial shows you how to get the most from Quill's technologies. ",
+        title: "Quill Tutorial",
+        scope: $scope,
+        buttons: [
+
           {
-            text: 'Take Photo',
-            type: 'button-positive',
+            text: 'Cancel',
+            type: 'button-light',
             onTap: function () {
               console.log("hello2");
               myPopup.close();
-              $scope.getPhoto();
 
             }
           }
         ]
-      });
-      $scope.closepopup = function () {
-        myPopup.close();
-      }
-    }
+      })
 
-    $scope.choosePhoto = function () {
-
-      console.log($scope.items)
-      window.imagePicker.getPictures(
-        function (results) {
-          for (var i = 0; i < results.length; i++) {
-
-            if (i < 4) {
-
-
-              console.log('Image URI: ' + results[i]);
-
-              var newimage = {
-                src: results[i],
-                sub: "Most recent photos 03/29/2016"
-              };
-              console.log($scope.items);
-              $scope.items.push(newimage);
-              console.log($scope.items);
-              $scope.reload();
-            } else {
-
-              alert("You can't upload more than 3 images, sorry!")
-            }
-          }
-        },
-        function (error) {
-          console.log('Error: ' + error);
-        }
-      );
-
-    }
-
-}
-  })
-
-  .controller('NotesCtrl', function ($scope, $state, $ionicModal, $http, $ionicPopup) {
-
-    $ionicModal.fromTemplateUrl('my-modal2.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-    }).then(function (modal) {
-      $scope.modal = modal;
-    });
-    $scope.openModal = function () {
-      console.log("modal open")
-      $scope.modal.show();
     };
-    $scope.closeModal = function () {
-      $scope.modal.hide();
-    };
-    //Cleanup the modal when we're done with it!
-    $scope.$on('$destroy', function () {
-      $scope.modal.remove();
-    });
-    // Execute action on hide modal
-    $scope.$on('modal.hidden', function () {
-      // Execute action
-    });
-    // Execute action on remove modal
-    $scope.$on('modal.removed', function () {
-      // Execute action
-    });
-
 
 
     $scope.photo = function () {
-      console.log("hello")
+      console.log("hello");
       $state.go('photoinfo');
       console.log("went")
-    }
+    };
 
     window.onload = function () {
-      $scope.saveData();
+      $scope.saveDatas();
     };
     // With the new view caching in Ionic, Controllers are only called
     // when they are recreated or on app start, instead of every page change.
@@ -880,7 +964,7 @@ $scope.closepopup = function () {
         ]
       })
 
-    }
+    };
 
 
     $scope.saveData = function () {
@@ -901,11 +985,11 @@ $scope.closepopup = function () {
       //        //Load dates
       //
 
-      var storedNotes = JSON.parse(window.localStorage.getItem("notes"));
-      $scope.newNotes = storedNotes
+      $scope.newNotes= JSON.parse(window.localStorage.getItem("notes"));;
+
 
       //Load dates
-      var notes = []
+      var notes = [];
       window.plugins.googleplus.login(
         {
           // 'scopes': ' ', // optional, space-separated list of scopes, If not included or empty, defaults to `profile` and `email`.
@@ -915,35 +999,35 @@ $scope.closepopup = function () {
         function (obj) {
           //alert(JSON.stringify(obj));
           $scope.error;
-          var url = "https://quill-1176.appspot.com/_ah/api/quillApi/v1/user/return/posts"
+          var url = "https://quill-1176.appspot.com/_ah/api/quillApi/v1/user/return/posts";
           $http.post(url, {
             "message":obj.idToken
             // "passwrd": storedUsername
           }).then(function (resps) {
-
+            // $scope.saveData()
             // console.log(resps)
-            console.log(notes)
-            resps = resps.data.posts
+            //console.log(notes);
+            resps = resps.data.posts;
             //alert(JSON.stringify(resps))
             if (resps == undefined) {
               return $scope.$broadcast('scroll.refreshComplete');
             }
             for (var x = 0; x < resps.length; x++) {
 
-              addInfo = {}
-              resp = resps[x]
+              addInfo = {};
+              resp = resps[x];
               if (resp.text == "User Fail") {
-                alert("please log in again")
+                alert("please log in again");
                 return $scope.$broadcast('scroll.refreshComplete');
               }
               // console.log(resp);
               summary = resp.summary;
               // console.log(summary)
-              summary = summary[0].summary
+              summary = summary[0].summary;
 
               concepts = resp.keywords;
               sentiment = resp.sentiment;
-              keywords = []
+              keywords = [];
               // console.log(concepts)
               // console.log(sentiment)
               for (var y = 0; y < concepts.length; y++) {
@@ -964,31 +1048,35 @@ $scope.closepopup = function () {
               // var str = d.toString();
               // str = str.substring(0, 15);
               addInfo.dates = resp.date;
-              addInfo.id = x
-              console.log(notes)
-              console.log(x)
-              notes.push(addInfo)
-              console.log(notes)
-              // $scope.Newnotes = notes
+              addInfo.id = x;
+              //console.log(notes);
+              //console.log(x);
+              notes.push(addInfo);
+              //console.log(notes);
+              // $scope.newNotes = notes
               // Stop the ion-refresher from spinning
 
 
             }
             $scope.$broadcast('scroll.refreshComplete');
-            $scope.Newnotes = notes
-            console.log($scope.Newnotes)
+            $scope.newNotes = notes;
+
             window.localStorage.setItem("notes", JSON.stringify(notes));
+
 
           })
         },
         function (msg) {
-          alert('error: ' + msg);
+          //alert('error: ' + msg);
         }
       );
 
-    }
+    };
     $scope.deletePost2 = function(postid, id){
+      $scope.newNotes.splice(id, 1)
+      window.localStorage.setItem("notes", JSON.stringify($scope.newNotes));
 
+      $state.go('tab.notes');
       var url = "https://quill-1176.appspot.com/_ah/api/quillApi/v1/post/delete";
 
       window.plugins.googleplus.login(
@@ -1000,6 +1088,7 @@ $scope.closepopup = function () {
         function (obj) {
           //alert(JSON.stringify(obj));
           $scope.error;
+
 
           $http.post(url, {
               "id": postid,
@@ -1016,10 +1105,10 @@ $scope.closepopup = function () {
                 alert("no post in database please reload")
               }
               if (resp.data.message == "success") {
-                alert("Deleted")
-                $state.go('tab.notes');
+                  $scope.saveData()
+
                 // $scope.save()
-                $scope.saveData()
+
 
               }
 
@@ -1031,39 +1120,108 @@ $scope.closepopup = function () {
         }
       );
 
-    }
+    };
     $scope.saveDatas = function(){
       var storedNotes = JSON.parse(window.localStorage.getItem("notes"));
       $scope.newNotes = storedNotes
-    }
+    };
+    $scope.addNote = function(note){
+    // alert(note)
+      $scope.newNotes= note;
+    };
 
     $scope.deleteNotes = function(){
-      $scope.Newnotes = []
-    }
+      $scope.newNotes = [];
+    };
+    $scope.saveDatas();
 
 
 
     $scope.loadData = function () {
       //alert(window.localStorage.getItem("data"));
-    }
+    };
 
 
 
     $scope.goto = function (toState, params) {
-      $state.go(toState, params) //remember to inject $state to your controller
+      $state.go(toState, params); //remember to inject $state to your controller
     }
 
 
   })
 
-  .controller('NoteDetailCtrl', function ($scope, $stateParams, $cordovaEmailComposer) {
+
+
+  .controller('NoteDetailCtrl', function ($scope, $state, $stateParams, $cordovaEmailComposer, $http, $ionicPopup) {
+	//you shouldnt leave ur computer open u scrub
+	$scope.Facts;
+	$scope.dragonflyResponse;
+	$scope.color;
+
+		$scope.dragonfly = function(topic, color){
+			$scope.sentiment = color;
+			if($scope.sentiment == "negative"){
+				$scope.color = "#e74c3c"
+			}
+			else if($scope.sentiment == "positive"){
+				$scope.color = "#27ae60"
+			}
+			else if ($scope.sentiment == "neutral"){
+				$scope.color = "#f39c12"
+			}
+			else{
+				$scope.color = black;
+			}
+			console.log($scope.color);
+
+			//First call
+			var query = topic;
+			//Test for quality results
+			http://dragonflysearch.com/api/suggest.php?q=
+				$http.get("http://dragonflysearch.com/api/suggest.php?q=" + query)
+            .then(function (response) {
+                //$scope.Facts = response.data.Facts;
+                console.log(response.data);
+                dflynotes = response.data;
+                $scope.dragonflyResponse = dflynotes;
+                console.log("SCOPE FACTS" + $scope.dragonflyResponse);
+                //console.log("DFLY NOTES.FACTS" + dflynotes.Facts[0]);
+									//Make Popup
+            })
+
+
+
+			$http.get("http://dragonflysearch.com/api/search.php?q=" + query)
+            .then(function (response) {
+                //$scope.Facts = response.data.Facts;
+                console.log("RESPONSE" + response.data.Facts);
+                dflynotes = response.data;
+                $scope.Facts = dflynotes.Facts;
+                console.log("SCOPE FACTS" + $scope.Facts);
+                console.log("DFLY NOTES.FACTS" + dflynotes.Facts[0]);
+									//Make Popup
+
+			var dragonflypopup = $ionicPopup.alert({
+        title: 'Further Research',
+        template: "<div class='item item-text-wrap'><p style='color:"+ $scope.color + "'><b> 1. </b> " + $scope.Facts[1] + "<br><small> Encyclopedia Britannica</small></p></div><div class='item item-text-wrap'><p style='color:"+ $scope.color + "'><b> 2. </b> " + $scope.Facts[2] + "<br><small> Encyclopedia Britannica</small></p></div><div class='item item-text-wrap'><p style='color:"+ $scope.color + "'><b> 3. </b> " + $scope.Facts[3] + "<br><small> Encyclopedia Britannica</small></p></div>"
+      });
+            })
+
+
+
+		}
+
+    $scope.back = function(){
+        $state.go('tab.notes');
+    }
+
     $scope.summaryisCollapsed = true;
     $scope.keywordsisCollapsed = true;
     $scope.textisCollapsed = true;
     $scope.researchisCollapsed = true;
 
     var storedNotes = JSON.parse(window.localStorage.getItem("notes"));
-    $scope.Newnotes = storedNotes;
+    $scope.newNotes = storedNotes;
 
     $scope.currentpage = window.location.href;
     var currentpage = window.location.href;
@@ -1071,12 +1229,13 @@ $scope.closepopup = function () {
     $scope.lastChar = lastChar;
 
     $scope.submit = function () {
-      var comments = "Keywords: " + $scope.Newnotes[lastChar].keywords[0] + "Summary: " + $scope.Newnotes[lastChar].summary + "Text: " + $scope.Newnotes[lastChar].text;
+      var comments = "Keywords: " + $scope.newNotes[lastChar].keywords[0] + "\n\n Summary: " + $scope.newNotes[lastChar].summary + "\n\n Text: " + $scope.newNotes[lastChar].text;
+
 
       var config = {
         'subject': "Saved Notes from Quill",
-        'comments': "Keywords: " + $scope.Newnotes[lastChar].keywords[0] + "<br> Summary: " + $scope.Newnotes[lastChar].summary + "<br> Text: " + $scope.Newnotes[lastChar].text
-      }
+        'comments': "Keywords: " + $scope.newNotes[lastChar].keywords[0] + "\n\n Summary: " + $scope.newNotes[lastChar].summary + "\n\n Text: " + $scope.newNotes[lastChar].text
+      };
 
       var emails = {
         subject: "Saved Notes from Quill",
@@ -1087,7 +1246,7 @@ $scope.closepopup = function () {
         console.log("email view dismissed")
       });
 
-    }
+    };
 
 
 
@@ -1106,6 +1265,9 @@ $scope.closepopup = function () {
       enableFriends: true
     };
   })
+.controller('SignUpController', function($scope){
+
+})
 
 
 
@@ -1117,4 +1279,4 @@ $scope.closepopup = function () {
 
     });
     $scope.profile = auth.profile;
-  })
+  });
