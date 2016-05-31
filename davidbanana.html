@@ -115,14 +115,29 @@ $scope.subs = [
     for (var i = 0; i < $scope.teachers.length; i++){
 
         if($scope.teachers[i].free1 == 0 || $scope.teachers[i].free2 == 0 || $scope.teachers[i].free3 == 0 || $scope.teachers[i].free4 == 0 & $scope.subs[0].subNum < i+2){  
+					console.log("Sup home skilet")
         $scope.subs[0].teachers.push($scope.teachers[i].name);
         $scope.subs[0].subNum.push(1);
       }
+			
+			
    //do the same thing for B block (where id = 1)
       else if($scope.teachers[i].free1 == 1 || $scope.teachers[i].free2 == 1 || $scope.teachers[i].free3 == 1 || $scope.teachers[i].free4 == 1 & $scope.subs[0].subNum < i+2){
-        $scope.subs[0].teachers.push($scope.teachers[i].name);
-        $scope.subs[0].subNum.push(1);
+				console.log($scope.subs[0].teachers);
+				$scope.subs[0].push({
+					teachers: "Buts",
+					subNum: 1
+				})
+				
+				//Line 127-130 is our nuanced push function but IDK WHY THE FUCK IT'S NOT FUCKING WORKING
+				console.log($scope.subs[0].teachers);
+				console.log($scope.subs[0].subNum);
+        //$scope.subs[0].teachers.push("BOobs and butts");
+        
       }
+			
+			
+			
    //same for C block 
       else if($scope.teachers[i].free1 == 1 || $scope.teachers[i].free2 == 1 || $scope.teachers[i].free3 == 1 || $scope.teachers[i].free4 == 1 & $scope.subs[0].subNum < i+2){
         $scope.subs[0].teachers.push($scope.teachers[i].name);
