@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+	
+	<script> 
+		
+		//this javascript file is meant to implemented in an angular.JS format
+//create array with the name of each teacher and their free blocks.
+//no teacher has more than 4 free blocks.
+//some have fewer than 4, so free number 10 will be used as a placeholder to indicate they don't have a 2nd, 3rd, or 4th free block.
+//here I manually inputed sample data, but ultimately the program would be able to connect to a JSON file. 
+var myApp = angular.module('myApp',[]);
+
+myApp.controller('MainCtrl', ['$scope', function($scope) {
+$scope.teachers = [
+  {
+			name:"Aldridge-Peacock",
+   free1:6,
+   free2:10,
+   free3:10,
+   free4:10
+   },
+   {name : "Alessandroni",
+   free1 : 1,
+   free2 : 5,
+   free3 : 6,
+   free4 : 10
+   },
+   {
+	name : "Allen",
+   free1 : 0,
+   free2 : 1,
+   free3 : 4,
+   free4 : 7
+   },
+   {name : "Ashenfelter",
+   free1 : 2,
+   free2 : 3,
+   free3 : 4,
+   free4 : 7
+   },
+   {name : "Bergstedt",
+   free1 : 0,
+   free2 : 1,
+   free3 : 6,
+   free4 : 7
+   },
+   {name : "Bethencourt",
+   free1 : 2,
+   free2 : 4,
+   free3 : 5,
+   free4 : 7
+   },
+   {name : "Boitano",
+   free1 : 1,
+   free2 : 5,
+   free3 : 7,
+   free4 : 10
+   }
+
+   ]
+
+
+//create array of blocks where A block id = 0, B block id = 1, ... H block id = 7. 
+//array element "teachers" will be filled as a later function iterates through the list of teachers.
+//array element subNum is the number of teachers assigned to that block.
+
+$scope.subs = [
+    {id : 0,
+  teachers : "none assigned",
+  subNum : 0
+  },
+  {id : 1,
+  teachers : "none assigned",
+  subNum : 0
+  },
+  {id : 2,
+  teachers : "none assigned",
+  subNum : 0
+  },
+  {id : 3,
+  teachers : "none assigned",
+  subNum : 0
+  },
+  {id : 4,
+  teachers : "none assigned",
+  subNum : 0
+  },
+  {id : 5,
+  teachers : "none assigned",
+  subNum : 0
+  },
+  {id : 6,
+  teachers : "none assigned",
+  subNum : 0
+  },
+  {id : 7,
+  teachers : "none assigned",
+  subNum : 0
+  }
+
+  ]
+  
+  //function that iterates through all the teachers, assigning each teacher to one of the eight blocks.
+
+  //if a teacher has A block free AND A block has fewer than 11 teachers assigned to it,
+  //then add that teacher to the A block array.
+  //I chose fewer then 11 because there are a total of 10 rotations in a semester 
+  //so there needn't be more than that number of teachers assigned per block
+  //subNum must be less than i+2, this way a teacher won't get a second block before 
+  //another teacher gets their first block
+  
+  $scope.blocks = function(){
+		console.log("Block been run");
+    for (var i = 0; i < $scope.teachers.length; i++){
+
+        if($scope.teachers[i].free1 == 0 || $scope.teachers[i].free2 == 0 || $scope.teachers[i].free3 == 0 || $scope.teachers[i].free4 == 0 & $scope.subs[0].subNum < i+2){  
+        $scope.subs[0].teachers.push($scope.teachers[i].name);
+        $scope.subs[0].subNum.push(1);
+      }
+   //do the same thing for B block (where id = 1)
+      else if($scope.teachers[i].free1 == 1 || $scope.teachers[i].free2 == 1 || $scope.teachers[i].free3 == 1 || $scope.teachers[i].free4 == 1 & $scope.subs[0].subNum < i+2){
+        $scope.subs[0].teachers.push($scope.teachers[i].name);
+        $scope.subs[0].subNum.push(1);
+      }
+   //same for C block 
+      else if($scope.teachers[i].free1 == 1 || $scope.teachers[i].free2 == 1 || $scope.teachers[i].free3 == 1 || $scope.teachers[i].free4 == 1 & $scope.subs[0].subNum < i+2){
+        $scope.subs[0].teachers.push($scope.teachers[i].name);
+        $scope.subs[0].subNum.push(1);
+      }
+//same for D block 
+      else if($scope.teachers[i].free1 == 1 || $scope.teachers[i].free2 == 1 || $scope.teachers[i].free3 == 1 || $scope.teachers[i].free4 == 1 & $scope.subs[0].subNum < i+2){
+        $scope.subs[0].teachers.push($scope.teachers[i].name);
+        $scope.subs[0].subNum.push(1);
+      }
+//same for E block 
+      else if($scope.teachers[i].free1 == 1 || $scope.teachers[i].free2 == 1 || $scope.teachers[i].free3 == 1 || $scope.teachers[i].free4 == 1 & $scope.subs[0].subNum < i+2){
+        $scope.subs[0].teachers.push($scope.teachers[i].name);
+        $scope.subs[0].subNum.push(1);
+      }
+//same for F block 
+      else if($scope.teachers[i].free1 == 1 || $scope.teachers[i].free2 == 1 || $scope.teachers[i].free3 == 1 || $scope.teachers[i].free4 == 1 & $scope.subs[0].subNum < i+2){
+        $scope.subs[0].teachers.push($scope.teachers[i].name);
+        $scope.subs[0].subNum.push(1);
+      }
+//same for G block 
+      else if($scope.teachers[i].free1 == 1 || $scope.teachers[i].free2 == 1 || $scope.teachers[i].free3 == 1 || $scope.teachers[i].free4 == 1 & $scope.subs[0].subNum < i+2){
+        $scope.subs[0].teachers.push($scope.teachers[i].name);
+        $scope.subs[0].subNum.push(1);
+      }
+//same for H block 
+      else if($scope.teachers[i].free1 == 1 || $scope.teachers[i].free2 == 1 || $scope.teachers[i].free3 == 1 || $scope.teachers[i].free4 == 1 & $scope.subs[0].subNum < i+2){
+        $scope.subs[0].teachers.push($scope.teachers[i].name + ";");
+        $scope.subs[0].subNum.push(1);
+      }
+    }
+  }
+  
+
+  //http://www.w3schools.com/jsref/jsref_split.asp 
+  //function that iterates through all the blocks (0-7, or A-H), and prints the teachers assigned to that block
+  $scope.view = function(){
+		console.log("View has been run");
+  	for (var i; i < $scope.subs.length; i++){
+    	console.log("The teachers for block " + $scope.sub.id[i] + ", are: " + $scope.sub.teachers[i]);
+    }
+  }
+}]);
+	</script>
+<body>
+
+<div ng-app="myApp">
+ <div ng-controller="MainCtrl">
+<p>To run the code make sure your console is open and then click <button ng-click="blocks()">Me</button>. Then wait a moment. And then click <button ng-click="view()">Me. </button></p>
+</div>
+</div>
+
+</body>
+</html>
