@@ -125,7 +125,7 @@ $scope.subs = [
       else if($scope.teachers[i].free1 == 1 || $scope.teachers[i].free2 == 1 || $scope.teachers[i].free3 == 1 || $scope.teachers[i].free4 == 1 & $scope.subs[0].subNum < i+2){
 				console.log($scope.subs[0].teachers);
 				$scope.subs[0].push({
-					teachers: "Buts",
+					teachers: $scope.teachers[i].name,
 					subNum: 1
 				})
 				
